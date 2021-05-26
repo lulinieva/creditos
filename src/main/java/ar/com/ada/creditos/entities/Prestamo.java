@@ -1,20 +1,33 @@
 package ar.com.ada.creditos.entities;
 
 import java.util. *;
+
+import javax.persistence.*;
+
 import java.math. *;
 
+@Entity
+@Table(name = "prestamo")
 public class Prestamo {
+
+    @Id
+    @Column(name = "prestamo_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //AUTOINCREMENTAL
 
     private int prestamoId;
 
+    @Temporal(TemporalType.DATE)
     private Date fecha;
 
     private BigDecimal importe;
 
     private int cuotas;
 
+    @Column(name = "fecha_alta")
     private Date fechaAlta;
 
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
     public int getPrestamoId() {
@@ -63,9 +76,7 @@ public class Prestamo {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+        this.cliente.agregarPrestamo(this); //relacio bidireccional
     }
-
-
-    
-   
+  
 }
