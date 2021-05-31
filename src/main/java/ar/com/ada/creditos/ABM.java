@@ -16,12 +16,14 @@ public class ABM {
     public static Scanner Teclado = new Scanner(System.in);
 
     protected ClienteManager ABMCliente = new ClienteManager();
+    protected PrestamoManager ABMPrestamo = new PrestamoManager();
 
     public void iniciar() throws Exception {
 
         try {
 
             ABMCliente.setup();
+            ABMPrestamo.setup();
 
             printOpciones();
 
@@ -54,6 +56,10 @@ public class ABM {
 
                     case 5:
                         listarPorNombre();
+                        break;
+
+                    case 6:
+                        listarPrestamo();
                         break;
 
                     default:
@@ -112,9 +118,6 @@ public class ABM {
         prestamo.setCuotas(5);
         prestamo.setFecha(new Date());
         prestamo.setFechaAlta(new Date());
-
-
-        
 
         ABMCliente.create(cliente);
 
@@ -255,6 +258,14 @@ public class ABM {
         }
     }
 
+    public void listarPrestamo() {
+
+        List<Prestamo> todos = ABMPrestamo.buscarTodos();
+        for (Prestamo p : todos) {
+            mostrarPrestamo(p);
+        }
+    }
+
     public void mostrarCliente(Cliente cliente) {
 
         System.out.print("Id: " + cliente.getClienteId() + " Nombre: " + cliente.getNombre() + " DNI: "
@@ -267,6 +278,19 @@ public class ABM {
         String fechaNacimientoStr = formatter.format(cliente.getFechaNacimiento());
 
         System.out.println(" Fecha Nacimiento: " + fechaNacimientoStr);
+    }
+
+    public void mostrarPrestamo(Prestamo prestamo) {
+        System.out.println("Id Préstamo: " + prestamo.getPrestamoId() + " Datos Cliente: " + prestamo.getCliente()
+                + " Cuotas: " + prestamo.getCuotas() + " Importe: " + prestamo.getImporte());
+
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaPrestamoStr = formatter.format(prestamo.getFecha());
+
+        System.out.println("Fecha: " + fechaPrestamoStr);
+
+        String fechaPrestamoAltaStr = formatter.format(prestamo.getFechaAlta());
+        System.out.println("Fecha de Alta: " + fechaPrestamoAltaStr);
     }
 
     public static void printOpciones() {
