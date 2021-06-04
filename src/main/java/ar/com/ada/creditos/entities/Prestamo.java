@@ -26,9 +26,13 @@ public class Prestamo {
     @Column(name = "fecha_alta")
     private Date fechaAlta;
 
+    @Column(name = "estado_id")
+    private int estadoId;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
+
 
     public int getPrestamoId() {
         return prestamoId;
@@ -78,5 +82,48 @@ public class Prestamo {
         this.cliente = cliente;
         this.cliente.agregarPrestamo(this); //relacio bidireccional
     }
-  
+
+    // ENUMERADO
+    public EstadoPrestamoEnum getEstadoId() {
+
+        return EstadoPrestamoEnum.parse(this.estadoId); //devuelve el estado del prestamo. EJ: Ingresa 1, devuelve SOLICITADO
+    }
+
+    public void setEstadoId(EstadoPrestamoEnum estadoId) {
+        this.estadoId = estadoId.getValue(); //En este caso, si escribo SOLICITADO, devuelve 1
+    }
+    public enum EstadoPrestamoEnum {
+        SOLICITADO(1),
+        RECHAZADO(2), 
+        PENDIENTE_APROBACION(3), 
+        APROBADO(4), 
+        INCOBRABLE(5), 
+        CANCELADO(6),
+        PREAPROBADO(100);
+
+        private final int value;
+
+        // NOTE: Enum constructor tiene que estar en privado
+        private EstadoPrestamoEnum(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static EstadoPrestamoEnum parse(int id) {
+            EstadoPrestamoEnum status = null; // Default
+            for (EstadoPrestamoEnum item : EstadoPrestamoEnum.values()) {
+                if (item.getValue() == id) {
+                    status = item;
+                    break;
+                }
+            }
+            return status;
+        }
+    }
+
 }
+  
+
